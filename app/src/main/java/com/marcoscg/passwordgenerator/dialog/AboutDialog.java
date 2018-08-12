@@ -1,0 +1,82 @@
+/*
+ * PasswordGenerator - AboutDialog.java
+ *
+ * Created by Marcos Calvo García on 13/08/18 0:30.
+ * Copyright (c) 2018. All rights reserved.
+ *
+ * Last modified 13/08/18 0:19.
+ */
+
+package com.marcoscg.passwordgenerator.dialog;
+
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.marcoscg.passwordgenerator.BuildConfig;
+import com.marcoscg.passwordgenerator.R;
+
+import java.lang.ref.WeakReference;
+
+import static android.app.Activity.RESULT_OK;
+
+/**
+ * A simple about dialog.
+ * @author @MarcosCGdev
+ */
+public class AboutDialog {
+
+    private static WeakReference<Context> contextRef;
+    private static AlertDialog.Builder alertDialog;
+    private static String author = "Your name", website = "www.yourwebsite.com";
+
+    public static AboutDialog with(Context context) {
+        contextRef = new WeakReference<Context>(context);
+
+        init();
+        return new AboutDialog();
+    }
+
+    public AboutDialog setAuthor(String author) {
+        AboutDialog.author = author;
+        return this;
+    }
+
+    public AboutDialog setWebsite(String website) {
+        AboutDialog.website = website;
+        return this;
+    }
+
+    public void show() {
+        if (alertDialog!=null)
+            alertDialog.show();
+    }
+
+    private static void init() {
+        alertDialog = new AlertDialog.Builder(contextRef.get());
+        View view = View.inflate(contextRef.get(), R.layout.about_dialog_content, null);
+        TextView textView = view.findViewById(R.id.message);
+
+        String message = "<b>Version:</b> " + BuildConfig.VERSION_NAME +
+                "<br><b>Author:</b> " + author + "<br><br><b>Website:</b><br>" + website;
+
+        if (view.getParent()!=null)
+            ((ViewGroup)view.getParent()).removeView(view);
+
+        textView.setText(Html.fromHtml(message));
+        textView.setAutoLinkMask(RESULT_OK);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        Linkify.addLinks(textView, Linkify.WEB_URLS);
+
+        alertDialog.setIcon(R.mipmap.ic_launcher);
+        alertDialog.setTitle(R.string.about);
+        alertDialog.setView(view);
+        alertDialog.setPositiveButton(android.R.string.ok, null);
+    }
+
+}
