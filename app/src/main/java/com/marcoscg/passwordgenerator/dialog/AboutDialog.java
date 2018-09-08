@@ -33,28 +33,52 @@ public class AboutDialog {
 
     private static WeakReference<Context> contextRef;
     private static AlertDialog.Builder alertDialog;
-    private static String author = "Your name", website = "www.yourwebsite.com";
+    private static String authorStr = "Your name", websiteStr = "www.yourwebsite.com";
 
-    public static AboutDialog with(Context context) {
+    public AboutDialog(Context context, String author, String website) {
         contextRef = new WeakReference<Context>(context);
+        authorStr = author;
+        websiteStr = website;
 
         init();
-        return new AboutDialog();
     }
 
-    public AboutDialog setAuthor(String author) {
-        AboutDialog.author = author;
-        return this;
-    }
-
-    public AboutDialog setWebsite(String website) {
-        AboutDialog.website = website;
-        return this;
+    private AboutDialog(AboutDialog.Builder builder) {
+        this(builder.context, builder.author, builder.website);
     }
 
     public void show() {
         if (alertDialog!=null)
             alertDialog.show();
+    }
+
+    public static class Builder {
+
+        private Context context;
+        private String author = "Your name", website = "www.yourwebsite.com";
+
+        public Builder(Context context) {
+            this.context = context;
+        }
+
+        public Builder setAuthor(String author) {
+            this.author = author;
+            return this;
+        }
+
+        public Builder setWebsite(String website) {
+            this.website = website;
+            return this;
+        }
+
+        public AboutDialog build() {
+            return new AboutDialog(this);
+        }
+
+        public void show() {
+            new AboutDialog(this).show();
+        }
+
     }
 
     private static void init() {
@@ -63,7 +87,7 @@ public class AboutDialog {
         TextView textView = view.findViewById(R.id.message);
 
         String message = "<b>Version:</b> " + BuildConfig.VERSION_NAME +
-                "<br><b>Author:</b> " + author + "<br><br><b>Website:</b><br>" + website;
+                "<br><b>Author:</b> " + authorStr + "<br><br><b>Website:</b><br>" + websiteStr;
 
         if (view.getParent()!=null)
             ((ViewGroup)view.getParent()).removeView(view);
