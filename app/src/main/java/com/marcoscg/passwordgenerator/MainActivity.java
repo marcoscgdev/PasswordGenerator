@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.marcoscg.passwordgenerator.dialog.AboutDialog;
@@ -135,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        setValidationTo(lowerLettersSwitch);
+        setValidationTo(upperLettersSwitch);
+        setValidationTo(digitsSwitch);
+        setValidationTo(symbolsSwitch);
+
         // Generate password automatically when app starts
         if (TextUtils.isEmpty(passwordResult.getText()))
             generatePassword();
@@ -181,5 +187,19 @@ public class MainActivity extends AppCompatActivity {
                 .useDigits(digitsSwitch.isChecked())
                 .usePunctuation(symbolsSwitch.isChecked())
                 .build();
+    }
+
+    private void validateSwitch() {
+        if (!lowerLettersSwitch.isChecked() && !upperLettersSwitch.isChecked() && !digitsSwitch.isChecked() && !symbolsSwitch.isChecked())
+            lowerLettersSwitch.setChecked(true);
+    }
+
+    private void setValidationTo(SwitchCompat switchCompat) {
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                validateSwitch();
+            }
+        });
     }
 }

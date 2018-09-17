@@ -150,6 +150,10 @@ public final class PasswordGenerator {
             charCategories.add(PUNCTUATION);
         }
 
+        if (charCategories.size() == 0) {
+            return "";
+        }
+
         // Build the password.
         for (int i = 0; i < length; i++) {
             String charCategory = charCategories.get(random.nextInt(charCategories.size()));
